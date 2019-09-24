@@ -6,15 +6,19 @@ var logger = require('morgan');
 var app = express();
 const control = require('./controller/main.js');
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.all('*', function(req, res, next) {
+  // 设置允许跨域
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,PATCH,OPTIONS");
+
+  next();
+});
 
 app.use(function(req, res, next) {
   control(req, res, next);
